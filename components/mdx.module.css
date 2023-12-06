@@ -1,0 +1,40 @@
+/* Set all group's indentation */
+.docs-group {
+  margin-left: 8px;
+  padding-left: 12px;
+  border-left: 1.5px solid rgba(128, 128, 128, 0.2);
+}
+
+.docs-title {
+  color: gray;
+  margin: 4px 0px;
+  background-color: transparent;
+  -webkit-transition-property: background-color, color;
+  -webkit-transition-duration: 0.25s;
+  transition-property: background-color, color;
+  transition-duration: 0.25s;
+  border-radius: 8px;
+}
+
+.docs-title-sel {
+  color: inherit;
+  background-color: rgba(128, 128, 128, 0.14);
+}
+
+/* Set padding for all titles that are not links */
+.docs-title p {
+  padding: 8px;
+}
+
+/* Set padding and increase target size for all a tags */
+.docs-title a {
+  display: block;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.docs-title:hover {
+  color: inherit;
+  /* color: var(--foreground-rgb); */
+  background-color: rgba(128, 128, 128, 0.06);
+}

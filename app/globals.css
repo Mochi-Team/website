@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 240, 240, 240;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 24, 24, 24;
+    --background-end-rgb: 12, 12, 12;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+.bg-initial-color {
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+.foreground-color {
+  color: rgb(var(--foreground-rgb));
+}
+
+.on-dismiss-blur {
+  animation: 500ms ease-in-out 0s 1 dismissBlurAnimation forwards;
+}
+
+.header-menu-reveal {
+  animation: 250ms ease-in 0s 1 headerRevealAnimation;
+}
+
+.header-menu-dismiss {
+  animation: 250ms ease-in 0s 1 headerDismissAnimaton;
+  animation-fill-mode: forwards;
+}
+
+@keyframes headerDismissAnimaton {
+  from {
+    filter: blur(0rem);
+    opacity: 1;
+  }
+  to {
+    filter: blur(6rem);
+    opacity: 0;
+    display: none;
+  }
+}
+
+@keyframes headerRevealAnimation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
