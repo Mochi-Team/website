@@ -4,9 +4,9 @@ import type { MDXComponents } from "mdx/types";
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     // Allows customizing built-in components, e.g. to add styling.
-    h1: ({ children }) => {
-      return titleProperties("text-3xl", "font-bold", children)
-    },
+    // h1: ({ children }) => {
+    //   return titleProperties("text-3xl", "font-bold", children)
+    // },
     ...components,
   };
 }

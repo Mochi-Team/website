@@ -2,53 +2,50 @@ import { readFile, readdir } from "fs/promises";
 import path, { join } from "path";
 import capitalize from "title";
 
-// type DocMetadata = {
-//   [fileName: string]: string;
-// };
-
-type DocMetadata = {
-  [key in string]: string
+type MDXMetadata = {
+  [fileName in string]: string
 }
 
-export type DocChild = {
+export type MDXItem = MDXFile | MDXDir;
+
+export type MDXFile = {
+  slug: string[];
+  title: string;
+  href: string;
+};
+
+export type MDXDir = {
   slug: string[];
   title: string;
   href?: string;
+  items: MDXItem[];
 };
 
-export type DocFile = {
-  href: string;
-} & DocChild;
-
-export type DocDir = {
-  children: (DocFile | DocDir)[];
-} & DocChild;
-
-export const allValidDocsDirectories = async (): Promise<DocDir> => {
+export const allValidMDXDirectories = async (): Promise<MDXDir> => {
   const parentDir = path.join(process.cwd(), "app/docs");
 
   const recursiveDir = async (
     prevDir: string,
     dir: string
-  ): Promise<DocDir> => {
-    let meta: DocMetadata | undefined = await readFile(
+  ): Promise<MDXDir> => {
+    let meta: MDXMetadata | undefined = await readFile(
       path.join(dir, "_meta.json"),
       { encoding: "utf8" }
     )
     .then((o) => JSON.parse(o))
     .catch((_) => undefined);
 
-    const value: DocDir = {
+    const value: MDXDir = {
       slug: path.relative(parentDir, dir).split("/").filter(o => o.length > 0),
       title: capitalize(path.relative(prevDir, dir).replace("-", " ")),
-      children: [],
+      items: [],
     };
 
     const dirs = await readdir(dir, { withFileTypes: true });
 
     for (const n of dirs) {
       const somePath = path.join(n.path, n.name);
-      if (somePath.includes("[[...slug]]")) {
+      if (somePath.includes("...slug")) {
         continue;
       }
 
@@ -63,7 +60,7 @@ export const allValidDocsDirectories = async (): Promise<DocDir> => {
         value.title = title;
         value.href = path.resolve("/docs", value.slug.join("/"));
       } else if (n.name.includes(".mdx")) {
-        value.children.push({
+        value.items.push({
           slug: value.slug.concat(slug),
           title: title,
           href: path.resolve("/docs", value.slug.join("/"), slug),
@@ -71,13 +68,13 @@ export const allValidDocsDirectories = async (): Promise<DocDir> => {
       } else if (n.isDirectory()) {
         const docDir = await recursiveDir(dir, somePath);
         docDir.title = title;
-        value.children.push(docDir);
+        value.items.push(docDir);
       }
     }
 
     if (meta) {
       const keys = Object.keys(meta);
-      value.children.sort((a, b) => {
+      value.items.sort((a, b) => {
         // Get indexes from meta, if available
         const aSlug = a.slug[a.slug.length - 1];
         const bSlug = b.slug[a.slug.length - 1];
@@ -100,7 +97,7 @@ export const allValidDocsDirectories = async (): Promise<DocDir> => {
       });
     } else {
       // Sort by title
-      value.children.sort((a, b) => a.title < b.title ? -1 : a.title > b.title ? 1 : 0)
+      value.items.sort((a, b) => a.title < b.title ? -1 : a.title > b.title ? 1 : 0)
     }
 
     return value;

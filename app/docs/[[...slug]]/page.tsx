@@ -1,38 +1,44 @@
 import path from "path";
 import {
-  DocChild,
-  DocDir,
-  DocFile,
-  allValidDocsDirectories,
-} from "@/utils/docs-paths";
+  MDXItem,
+  MDXDir,
+  MDXFile,
+  allValidMDXDirectories,
+} from "@/utils/mdx-paths";
 import {
   MDXGroupComponents,
   MDXTitleComponent,
-} from "@/components/mdx-components";
+} from "@/components/mdx-elements";
 import "@/utils/array";
 import styles from "./page.module.css";
-import title from "title";
 import Link from "next/link";
 
 // Throw error if a dynamicParam was not found
 export const dynamicParams = false;
 
+type MDXMetaItem = {
+  mdx: MDXItem;
+  path: MDXItem[];
+  prev?: MDXItem;
+  next?: MDXItem;
+};
+
 export const generateStaticParams = async () => {
-  const allSlugs = (child: DocFile | DocDir) => {
+  const allSlugs = (child: MDXFile | MDXDir) => {
     const slugs: { slug: string[] }[] = [];
 
     if (child.href) {
       slugs.push({ slug: child.slug });
     }
 
-    if ("children" in child) {
-      child.children.forEach((c) => slugs.push(...allSlugs(c)));
+    if ("items" in child) {
+      child.items.forEach((c) => slugs.push(...allSlugs(c)));
     }
 
     return slugs;
   };
 
-  return allSlugs(await allValidDocsDirectories());
+  return allSlugs(await allValidMDXDirectories());
 };
 
 export default async function Page({
@@ -41,20 +47,18 @@ export default async function Page({
   params: { slug?: string[] };
 }) {
   const slug = params.slug ?? [];
-  const allDirs = await allValidDocsDirectories();
-  const { mdx: mdxMeta, prev, next } = getMetaFromSlug(slug, allDirs);
-
-  if (!mdxMeta) throw Error(`mdx file not found for ${slug.join("")}`);
+  const allDirs = await allValidMDXDirectories();
+  const meta = retrieveMDXItemMetadata(slug, allDirs);
+  if (!meta) throw Error(`mdx file not found for ${path.join(...slug)}`);
+  const { mdx: mdxMeta, path: titlesPath, prev, next } = meta;
 
   const filePath = path.normalize(
-    path.join(...slug, "children" in mdxMeta ? "index" : "") + ".mdx"
+    path.join(...slug, "items" in mdxMeta ? "index" : "") + ".mdx"
   );
 
   const Content: (props: any) => JSX.Element = await import(
     `../${filePath}`
   ).then((p) => p.default);
-
-  const titlesPath = retrieveTitlesForSlug(slug, allDirs);
 
   return (
     <div className="flex flex-col">
@@ -62,7 +66,7 @@ export default async function Page({
       <div className="lg:absolute lg:-translate-x-[120%] w-fit lg:min-w-[140px]">
         <ul className={styles["docs-main-group"]}>
           <MDXTitleComponent child={allDirs} selected={slug} />
-          <MDXGroupComponents children={allDirs.children} selected={slug} />
+          <MDXGroupComponents items={allDirs.items} selected={slug} />
         </ul>
       </div>
       {/* Path */}
@@ -76,97 +80,110 @@ export default async function Page({
                 idx === arr.length - 1 ? "text-inherit" : "text-neutral-500"
               }
             >
-              {o}
+              {o.href ? <Link href={o.href}>{o.title}</Link> : o.title}
             </p>
           </>
         ))}
       </div>
-      <div>
-        <p className="text-4xl font-bold pb-6">{mdxMeta.title}</p>
+      <div className="w-full prose prose-neutral dark:prose-invert">
+        <h1>{mdxMeta.title}</h1>
         <Content />
-        {/* Pages */}
-        <div className="flex w-full pt-10 pb-2 text-lg font-medium">
-          {prev?.href ? (
-            <Link href={prev.href}>
-              {"<"} {prev.title}
-            </Link>
-          ) : (
-            <></>
-          )}
-          <p className="flex-grow"></p>
-          {next?.href ? (
-            <Link href={next.href}>
-              {next.title} {">"}
-            </Link>
-          ) : (
-            <></>
-          )}
-        </div>
+      </div>
+      <hr className="opacity-10 my-8" />
+      <div className="w-full flex flex-col sm:flex-row font-medium text-neutral-50">
+        {prev?.href ? (
+          <Link className="flex flex-grow flex-col" href={prev.href}>
+            <p className="text-sm">Previous Page</p>
+            <div className="flex flex-row gap-1 text-lg font-extrabold">
+              <p>&laquo;</p>
+              <p>{prev.title}</p>
+            </div>
+          </Link>
+        ) : (
+          <></>
+        )}
+        {next?.href ? (
+          <Link className="flex flex-grow flex-col items-end" href={next.href}>
+            <p className="text-sm">Next Page</p>
+            <div className="flex flex-row gap-1 text-lg font-extrabold">
+              <p>{next.title}</p>
+              <p>&raquo;</p>
+            </div>
+          </Link>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
 }
 
-const getMetaFromSlug = (
+function retrieveMDXItemMetadata(
   slug: string[],
-  child: DocDir | DocFile,
-  prev: { value?: DocChild } = {},
-  next: { value?: DocChild } = {}
-): { mdx?: DocChild; prev?: DocChild; next?: DocChild } => {
-  if (slug.isEqual(child.slug)) {
-    // if (!next.value && "children" in child) {
-    //   next.value = child.children.find(c => c.href !== undefined && !c.slug.isEqual(child.slug));
-    // }
-    return { mdx: child, prev: prev.value, next: next.value };
-  } else if ("children" in child) {
-    if (child.href) prev.value = child;
-    // next.value = child.children.find((v) =>  v.href != undefined && !v.slug.isEqual(child.slug));
-    for (let i = 0; i < child.children.length; i++) {
-      const c = child.children[i];
-      // next.value = child.children.find((v, idx) =>  i < idx && v.href != undefined);
-      const nested = getMetaFromSlug(slug, c, prev, next);
+  item: MDXItem,
+  slugIndex?: number,
+  ref?: MDXMetaItem
+): MDXMetaItem | undefined {
+  const _ref = ref ?? { mdx: item, path: [] };
+  let _slugIndex = slugIndex ?? 0;
 
-      if (nested.mdx) {
-        return nested;
-      } else if (!("children" in c) && c.href) {
-        prev.value = c;
+  const expectedSubSlug = slug[_slugIndex];
+  const actualSubSlug = item.slug[_slugIndex];
+
+  if (!expectedSubSlug && _slugIndex > 0) return undefined;
+
+  if (expectedSubSlug == actualSubSlug) {
+    _ref.path.push(item);
+
+    if (_slugIndex + 1 < slug.length) {
+      _slugIndex++;
+    } else {
+      _ref.mdx = item;
+
+      if (!_ref.next) {
+        _ref.next = findNextItemWithLink(item);
+      }
+      return _ref;
+    }
+  }
+
+  if (item.href) {
+    _ref.prev = item;
+  }
+
+  if ("items" in item) {
+    for (let i = 0; i < item.items.length; i++) {
+      const found = retrieveMDXItemMetadata(
+        slug,
+        item.items[i],
+        _slugIndex,
+        _ref
+      );
+      if (found) {
+        if (!_ref.next) {
+          _ref.next = item.items.find((c, idx) => idx > i && c.href);
+        }
+        return found;
       }
     }
   }
 
-  return {};
-};
+  return undefined;
+}
 
-const retrieveTitlesForSlug = (
-  slug: string[],
-  child: DocDir | DocFile,
-  slugIndex: number | undefined = undefined
-): string[] => {
-  const titles: string[] = [];
-  slugIndex = slugIndex ?? 0;
-
-  if (child.slug.isEqual(slug)) {
-    titles.push(child.title);
-  } else {
-    const expectedSubSlug = slug[slugIndex];
-    const actualSubSlug = child.slug[slugIndex];
-
-    if (!expectedSubSlug) return titles;
-
-    if (expectedSubSlug === actualSubSlug) {
-      titles.push(child.title);
-      slugIndex++;
-      titles.push(...retrieveTitlesForSlug(slug, child, slugIndex));
-    } else if (!actualSubSlug) {
-      if ("children" in child) {
-        for (let i = 0; i < child.children.length; i++) {
-          titles.push(
-            ...retrieveTitlesForSlug(slug, child.children[i], slugIndex)
-          );
+const findNextItemWithLink = (item: MDXItem): MDXItem | undefined => {
+  if ("items" in item) {
+    for (const c of item.items) {
+      if (c.href) {
+        return c;
+      } else {
+        const nested = findNextItemWithLink(c);
+        if (nested) {
+          return nested;
         }
       }
     }
   }
 
-  return titles;
+  return undefined;
 };

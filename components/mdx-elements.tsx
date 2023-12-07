@@ -1,17 +1,17 @@
 "use client";
 
 import styles from "./mdx.module.css";
-import { DocChild, DocDir, DocFile } from "@/utils/docs-paths";
+import { MDXItem, MDXDir, MDXFile } from "@/utils/mdx-paths";
 import Link from "next/link";
 import "../utils/array";
-import { useState } from "react";
+import { MouseEvent, MouseEventHandler, useState } from "react";
 import { HiOutlineChevronDown, HiOutlineChevronRight } from "react-icons/hi";
 
 const MDXGroup = ({
   child,
   selected,
 }: {
-  child: DocDir;
+  child: MDXDir;
   selected: string[];
 }) => {
   const [isExpanded, setExpanded] = useState(
@@ -26,24 +26,24 @@ const MDXGroup = ({
       selected={selected}
     >
       <ul className={`${styles["docs-group"]} ${isExpanded ? "" : "hidden"}`}>
-        <MDXGroupComponents children={child.children} selected={selected} />
+        <MDXGroupComponents items={child.items} selected={selected} />
       </ul>
     </MDXTitleComponent>
   );
 };
 
 export const MDXGroupComponents = ({
-  children,
+  items,
   selected,
 }: {
-  children: (DocDir | DocFile)[];
+  items: (MDXDir | MDXFile)[];
   selected: string[];
 }) => {
-  return children.map((c) =>
-    "children" in c ? (
-      <MDXGroup child={c} selected={selected} />
+  return items.map((c) =>
+    "items" in c ? (
+      <MDXGroup key={c.title} child={c} selected={selected} />
     ) : (
-      <MDXTitleComponent child={c} selected={selected} />
+      <MDXTitleComponent key={c.title} child={c} selected={selected} />
     )
   );
 };
@@ -55,7 +55,7 @@ export const MDXTitleComponent = ({
   selected,
   tapped,
 }: {
-  child: DocChild;
+  child: MDXItem;
   children?: JSX.Element;
   expanded?: boolean;
   selected: string[];
@@ -63,11 +63,22 @@ export const MDXTitleComponent = ({
 }) => {
   const titleDiv = () => {
     return (
-      <div className="flex flex-row gap-2 items-center">
+      <div onClick={(e) => {
+        if (!child.href && children) {
+          e.stopPropagation();
+          e.preventDefault();
+          tapped?.()
+        }
+      }} className="flex flex-row gap-2 items-center">
         {child.title}
         <div className="flex-grow"></div>
-        {children !== undefined ? (
-          <button onClick={tapped}>
+        {children ? (
+          <button onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            tapped?.()
+          }
+          }>
             <div className="p-1">
               {expanded ? <HiOutlineChevronDown /> : <HiOutlineChevronRight />}
             </div>
@@ -86,7 +97,13 @@ export const MDXTitleComponent = ({
           selected.isEqual(child.slug) ? styles["docs-title-sel"] : ""
         }`}
       >
-        {child.href ? <Link href={child.href}>{titleDiv()}</Link> : titleDiv()}
+        {child.href ? (
+          <Link href={child.href}>
+            {titleDiv()}
+          </Link>
+        ) : (
+          titleDiv()
+        )}
       </div>
       {children ? children : <></>}
     </li>

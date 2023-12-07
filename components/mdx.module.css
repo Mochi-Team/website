@@ -22,19 +22,30 @@
 }
 
 /* Set padding for all titles that are not links */
-.docs-title p {
+.docs-title {
   padding: 8px;
+  cursor: pointer;
 }
 
 /* Set padding and increase target size for all a tags */
 .docs-title a {
   display: block;
-  cursor: pointer;
-  padding: 8px;
+}
+
+.docs-title a button {
+  background-color: transparent;
+  -webkit-transition-property: background-color, color;
+  -webkit-transition-duration: 0.25s;
+  transition-property: background-color, color;
+  transition-duration: 0.25s;
+  border-radius: 8px;
+}
+
+.docs-title a button:hover {
+  background-color: rgba(128, 128, 128, 0.18);
 }
 
 .docs-title:hover {
   color: inherit;
-  /* color: var(--foreground-rgb); */
   background-color: rgba(128, 128, 128, 0.06);
 }
