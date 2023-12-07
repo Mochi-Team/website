@@ -1,0 +1,31 @@
+.nav {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 5.75rem);
+  transition: transform 500ms ease-in-out, opacity 500ms ease-in-out;
+}
+
+.showNav {
+  opacity: 1;
+  transform: translateY(0%);
+  overscroll-behavior: none!important;
+  overflow: auto!important;
+}
+
+.hideNav {
+  opacity: 0;
+  transform: translateY(-100%);
+  top: 0%;
+  margin-top: 0!important;
+}
+
+@keyframes navHideAnimation {
+  from {
+    filter: blur(6rem);
+    opacity: 0;
+  }
+  to {
+    filter: blur(0rem);
+    opacity: 1;
+  }
+}

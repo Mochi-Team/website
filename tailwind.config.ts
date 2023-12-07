@@ -4,7 +4,8 @@ const config: Config = {
   content: [
     './components/**/*.{js,ts,jsx,tsx}',
     './app/**/*.{js,ts,jsx,tsx}',
-    './mdx-components.tsx'
+    './mdx-components.tsx',
+    "next.config.mjs"
   ],
   theme: {
     extend: {

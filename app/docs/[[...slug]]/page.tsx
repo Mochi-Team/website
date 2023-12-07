@@ -74,13 +74,13 @@ export default async function Page({
         <p className="text-neutral-500">Documentation</p>
         {titlesPath.map((o, idx, arr) => (
           <>
-            <p className="font-semibold text-neutral-500">&rsaquo;</p>
+            <p className="font-semibold text-neutral-500">/</p>
             <p
               className={
                 idx === arr.length - 1 ? "text-inherit" : "text-neutral-500"
               }
             >
-              {o.href ? <Link href={o.href}>{o.title}</Link> : o.title}
+              {o.href ? <Link key={o.title} href={o.href}>{o.title}</Link> : o.title}
             </p>
           </>
         ))}

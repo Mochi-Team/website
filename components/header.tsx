@@ -1,44 +1,42 @@
 "use client";
 
+import styles from "./header.module.css";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { FiMenu, FiX } from "react-icons/fi";
-import { useState } from "react";
+import { useContext } from "react";
 import MochiLogo from "../public/mochi-logo.png";
+import { BodyContext } from "./body";
 
 export function Header() {
   const pathname = usePathname() || "/";
-  const [showingMenu, setShowingMenu] = useState(false);
-  const [firstInstance, setInitialInstance] = useState(true);
 
-  const eventHandler = () => {
-    setInitialInstance(false);
-    setShowingMenu(!showingMenu);
-  };
+  const { isShowingNav: isShowing, setShowingNav: setShowing } =
+    useContext(BodyContext) ?? {};
 
   type Tab = {
-    title: string,
-    href: string,
-    isSelected: (link: string) => boolean
-  }
+    title: string;
+    href: string;
+    isSelected: (link: string) => boolean;
+  };
 
   const tabs: Tab[] = [
-    { 
-      title: "Home", 
+    {
+      title: "Home",
       href: "/",
-      isSelected: (v) => v == "/"
+      isSelected: (v) => v == "/",
     },
-    { 
-      title: "Docs", 
+    {
+      title: "Docs",
       href: "/docs",
-      isSelected: (v) => /\/\bdocs\b\/?/.test(v)
+      isSelected: (v) => /\/\bdocs\b\/?/.test(v),
     },
   ];
 
   return (
     <header className="z-50">
-      <nav className="flex flex-row">
+      <nav className="flex flex-row relative z-20">
         <a
           href="/"
           className="flex gap-3 font-bold text-lg shrink items-center"
@@ -47,52 +45,48 @@ export function Header() {
           Mochi
         </a>
 
-        <div className="flex flex-col ml-auto sm:hidden">
-          <button
-            onClick={eventHandler}
-            className="ml-auto text-xl p-1 rounded-md transition ease-in-out duration-200 hover:bg-neutral-500/20"
-          >
-            {showingMenu ? <FiX /> : <FiMenu />}
-          </button>
-
-          <div
-            className={`${
-              firstInstance
-                ? "hidden"
-                : showingMenu
-                ? "header-menu-reveal"
-                : "header-menu-dismiss"
-            } absolute top-[92px] left-0 w-full h-full`}
-          >
-            <div className="header-reveal flex flex-col gap-2 p-8 bg-initial-color text-neutral-400 border-t-[0.12rem] border-neutral-500/20 h-full">
-              {tabs.map((tab) => (
-                <Link
-                  onClick={eventHandler}
-                  key={tab.title}
-                  className={`${
-                    tab.isSelected(pathname) ? "bg-neutral-500/20 foreground-color" : ""
-                  } hover:text-neutral-600 font-medium px-4 p-3 rounded-lg`}
-                  href={tab.href}
-                >
-                  {tab.title}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="hidden sm:flex text-sm font-medium flex-shrink ml-auto self-center space-x-4 foreground-color">
+        <div className="flex text-sm font-medium flex-shrink ml-auto self-center space-x-2 foreground-colo">
           {tabs.map((tab) => (
             <Link
               key={tab.title}
-              className={tab.isSelected(pathname) ? "" : "text-neutral-500"}
+              className={`hidden sm:block self-center hover:bg-neutral-500/25 rounded-lg transition-colors px-2 py-1 ${
+                tab.isSelected(pathname) ? "" : "text-neutral-500"
+              }`}
               href={tab.href}
             >
               {tab.title}
             </Link>
           ))}
+
+          <button
+            onClick={() => setShowing?.(!isShowing)}
+            className="sm:hidden ml-auto text-xl p-1 rounded-md transition ease-in-out duration-200 hover:bg-neutral-500/20"
+          >
+            {isShowing ? <FiX /> : <FiMenu />}
+          </button>
         </div>
       </nav>
+
+      <div
+        className={`${isShowing ? styles.showNav : styles.hideNav} ${
+          styles.nav
+        } absolute z-10 left-0 w-full sm:hidden mt-8 gap-2 p-8 bg-initial-color text-neutral-400 border-t-[0.12rem] border-neutral-500/20`}
+      >
+        {tabs.map((tab) => (
+          <Link
+            onClick={() => setShowing?.(!isShowing)}
+            key={tab.title}
+            className={`${
+              tab.isSelected(pathname)
+                ? "bg-neutral-500/20 foreground-color"
+                : ""
+            } hover:text-neutral-600 font-medium px-4 p-3 rounded-lg`}
+            href={tab.href}
+          >
+            {tab.title}
+          </Link>
+        ))}
+      </div>
     </header>
   );
 }

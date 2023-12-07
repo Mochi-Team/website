@@ -98,7 +98,7 @@ export const MDXTitleComponent = ({
         }`}
       >
         {child.href ? (
-          <Link href={child.href}>
+          <Link key={child.title} href={child.href}>
             {titleDiv()}
           </Link>
         ) : (
