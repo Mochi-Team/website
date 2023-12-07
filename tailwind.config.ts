@@ -1,11 +1,11 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
     './components/**/*.{js,ts,jsx,tsx}',
     './app/**/*.{js,ts,jsx,tsx}',
     './mdx-components.tsx',
-    "next.config.mjs"
+    'next.config.mjs',
   ],
   theme: {
     extend: {
@@ -17,5 +17,5 @@ const config: Config = {
     },
   },
   plugins: [require('@tailwindcss/typography')],
-}
-export default config
+};
+export default config;

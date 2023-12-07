@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier -w ."
   },
   "dependencies": {
     "@mdx-js/loader": "^3.0.0",
@@ -36,6 +38,11 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "@types/title": "^3.4.3"
+    "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
+    "@types/title": "^3.4.3",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.1.0",
+    "prettier-plugin-tailwindcss": "^0.5.9"
   }
 }

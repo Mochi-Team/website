@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Inter } from "next/font/google";
-import { createContext, useState } from "react";
+import { Inter } from 'next/font/google';
+import { createContext, useState } from 'react';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export type BodyContextType = {
   isShowingNav: boolean;
@@ -17,8 +17,8 @@ export const Body = ({ children }: { children: JSX.Element }) => {
   return (
     <BodyContext.Provider value={{ isShowingNav, setShowingNav }}>
       <body
-        className={`${inter.className} min-h-screen p-8 antialiased ${
-          isShowingNav ? "overflow-hidden sm:overflow-auto" : "overflow-auto"
+        className={`${inter.className} min-h-screen antialiased ${
+          isShowingNav ? 'overflow-hidden sm:overflow-auto' : 'overflow-auto'
         }`}
       >
         {children}

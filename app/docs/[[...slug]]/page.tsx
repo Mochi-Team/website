@@ -1,17 +1,17 @@
-import path from "path";
+import path from 'path';
 import {
   MDXItem,
   MDXDir,
   MDXFile,
   allValidMDXDirectories,
-} from "@/utils/mdx-paths";
+} from '@/utils/mdx-paths';
 import {
   MDXGroupComponents,
   MDXTitleComponent,
-} from "@/components/mdx-elements";
-import "@/utils/array";
-import styles from "./page.module.css";
-import Link from "next/link";
+} from '@/components/mdx-elements';
+import '@/utils/array';
+import styles from './page.module.css';
+import Link from 'next/link';
 
 // Throw error if a dynamicParam was not found
 export const dynamicParams = false;
@@ -31,7 +31,7 @@ export const generateStaticParams = async () => {
       slugs.push({ slug: child.slug });
     }
 
-    if ("items" in child) {
+    if ('items' in child) {
       child.items.forEach((c) => slugs.push(...allSlugs(c)));
     }
 
@@ -53,7 +53,7 @@ export default async function Page({
   const { mdx: mdxMeta, path: titlesPath, prev, next } = meta;
 
   const filePath = path.normalize(
-    path.join(...slug, "items" in mdxMeta ? "index" : "") + ".mdx"
+    path.join(...slug, 'items' in mdxMeta ? 'index' : '') + '.mdx'
   );
 
   const Content: (props: any) => JSX.Element = await import(
@@ -63,34 +63,40 @@ export default async function Page({
   return (
     <div className="flex flex-col">
       {/* Sidebar */}
-      <div className="lg:absolute lg:-translate-x-[120%] w-fit lg:min-w-[140px]">
-        <ul className={styles["docs-main-group"]}>
+      <div className="w-fit lg:absolute lg:min-w-[140px] lg:-translate-x-[120%]">
+        <ul className={styles['docs-main-group']}>
           <MDXTitleComponent child={allDirs} selected={slug} />
           <MDXGroupComponents items={allDirs.items} selected={slug} />
         </ul>
       </div>
       {/* Path */}
-      <div className="my-2 py-1 flex flex-row gap-2 text-sm">
+      <div className="my-2 flex flex-row gap-2 py-1 text-sm">
         <p className="text-neutral-500">Documentation</p>
         {titlesPath.map((o, idx, arr) => (
           <>
             <p className="font-semibold text-neutral-500">/</p>
             <p
               className={
-                idx === arr.length - 1 ? "text-inherit" : "text-neutral-500"
+                idx === arr.length - 1 ? 'text-inherit' : 'text-neutral-500'
               }
             >
-              {o.href ? <Link key={o.title} href={o.href}>{o.title}</Link> : o.title}
+              {o.href ? (
+                <Link key={o.title} href={o.href}>
+                  {o.title}
+                </Link>
+              ) : (
+                o.title
+              )}
             </p>
           </>
         ))}
       </div>
-      <div className="w-full prose prose-neutral dark:prose-invert">
+      <div className="prose prose-neutral w-full dark:prose-invert">
         <h1>{mdxMeta.title}</h1>
         <Content />
       </div>
-      <hr className="opacity-10 my-8" />
-      <div className="w-full flex flex-col sm:flex-row font-medium text-neutral-50">
+      <hr className="my-8 opacity-10" />
+      <div className="flex w-full flex-col font-medium text-neutral-50 sm:flex-row">
         {prev?.href ? (
           <Link className="flex flex-grow flex-col" href={prev.href}>
             <p className="text-sm">Previous Page</p>
@@ -151,7 +157,7 @@ function retrieveMDXItemMetadata(
     _ref.prev = item;
   }
 
-  if ("items" in item) {
+  if ('items' in item) {
     for (let i = 0; i < item.items.length; i++) {
       const found = retrieveMDXItemMetadata(
         slug,
@@ -172,7 +178,7 @@ function retrieveMDXItemMetadata(
 }
 
 const findNextItemWithLink = (item: MDXItem): MDXItem | undefined => {
-  if ("items" in item) {
+  if ('items' in item) {
     for (const c of item.items) {
       if (c.href) {
         return c;

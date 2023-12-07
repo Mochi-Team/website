@@ -2,21 +2,20 @@
   display: flex;
   flex-direction: column;
   height: calc(100% - 5.75rem);
-  transition: transform 500ms ease-in-out, opacity 500ms ease-in-out;
+  transition:
+    transform 500ms ease-in-out,
+    opacity 500ms ease-in-out;
 }
 
 .showNav {
-  opacity: 1;
+  transition: transform 500ms ease-in-out;
   transform: translateY(0%);
-  overscroll-behavior: none!important;
-  overflow: auto!important;
+  overscroll-behavior: none !important;
+  overflow: auto !important;
 }
 
 .hideNav {
-  opacity: 0;
-  transform: translateY(-100%);
-  top: 0%;
-  margin-top: 0!important;
+  transform: translateY(calc(-100% - 28px - 4rem));
 }
 
 @keyframes navHideAnimation {
