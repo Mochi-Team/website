@@ -1,16 +1,18 @@
 import path from 'path';
 import {
-  MDXItem,
+  allValidMDXDirectories,
   MDXDir,
   MDXFile,
-  allValidMDXDirectories,
+  MDXItem,
 } from '@/utils/mdx-paths';
+
 import {
   MDXGroupComponents,
   MDXTitleComponent,
 } from '@/components/mdx-elements';
+
 import '@/utils/array';
-import styles from './page.module.css';
+
 import Link from 'next/link';
 
 // Throw error if a dynamicParam was not found
@@ -61,65 +63,75 @@ export default async function Page({
   ).then((p) => p.default);
 
   return (
-    <div className="flex flex-col">
-      {/* Sidebar */}
-      <div className="w-fit lg:absolute lg:min-w-[140px] lg:-translate-x-[120%]">
-        <ul className={styles['docs-main-group']}>
+    <div className="flex w-full flex-col justify-center sm:flex-row">
+      {/* Left Sidebar */}
+      <div className="w-fill sm:h-content sm:[&:not(:hover)]:invisible-scrollbar flex-shrink-0 flex-grow-0 pl-8 pr-8 sm:sticky sm:right-0 sm:top-[var(--navbar-height)] sm:w-[12rem] sm:self-start sm:overflow-y-scroll sm:pr-0">
+        <p className="px-2 py-3 text-sm font-bold">Documentation</p>
+        <ul className={`list-none text-sm`}>
           <MDXTitleComponent child={allDirs} selected={slug} />
           <MDXGroupComponents items={allDirs.items} selected={slug} />
         </ul>
       </div>
-      {/* Path */}
-      <div className="my-2 flex flex-row gap-2 py-1 text-sm">
-        <p className="text-neutral-500">Documentation</p>
-        {titlesPath.map((o, idx, arr) => (
-          <>
-            <p className="font-semibold text-neutral-500">/</p>
-            <p
-              className={
-                idx === arr.length - 1 ? 'text-inherit' : 'text-neutral-500'
-              }
+      {/* Center Items */}
+      <div className="max-w-layout flex w-full flex-col">
+        {/* Path */}
+        <div className="my-2 flex flex-row gap-2 py-1 text-sm">
+          <p className="text-neutral-500">Documentation</p>
+          {titlesPath.map((o, idx, arr) => (
+            <>
+              <p className="font-semibold text-neutral-500">/</p>
+              <p
+                className={
+                  idx === arr.length - 1 ? 'text-inherit' : 'text-neutral-500'
+                }
+              >
+                {o.href ? (
+                  <Link key={o.title} href={o.href}>
+                    {o.title}
+                  </Link>
+                ) : (
+                  o.title
+                )}
+              </p>
+            </>
+          ))}
+        </div>
+        {/* Content */}
+        <div className="prose prose-neutral w-full dark:prose-invert">
+          <h1>{mdxMeta.title}</h1>
+          <Content />
+        </div>
+        <div className="my-8 h-[1px] w-full bg-neutral-500/20"></div>
+        <div className="mb-8 flex w-full flex-row font-medium">
+          {prev?.href ? (
+            <Link className="flex flex-grow flex-col" href={prev.href}>
+              <p className="text-sm text-neutral-500">Previous Page</p>
+              <div className="flex flex-row gap-1 text-lg font-extrabold">
+                <p>&laquo;</p>
+                <p>{prev.title}</p>
+              </div>
+            </Link>
+          ) : (
+            <></>
+          )}
+          {next?.href ? (
+            <Link
+              className="flex flex-grow flex-col items-end"
+              href={next.href}
             >
-              {o.href ? (
-                <Link key={o.title} href={o.href}>
-                  {o.title}
-                </Link>
-              ) : (
-                o.title
-              )}
-            </p>
-          </>
-        ))}
+              <p className="text-sm text-neutral-500">Next Page</p>
+              <div className="flex flex-row gap-1 text-lg font-extrabold">
+                <p>{next.title}</p>
+                <p>&raquo;</p>
+              </div>
+            </Link>
+          ) : (
+            <></>
+          )}
+        </div>
       </div>
-      <div className="prose prose-neutral w-full dark:prose-invert">
-        <h1>{mdxMeta.title}</h1>
-        <Content />
-      </div>
-      <hr className="my-8 opacity-10" />
-      <div className="flex w-full flex-col font-medium text-neutral-50 sm:flex-row">
-        {prev?.href ? (
-          <Link className="flex flex-grow flex-col" href={prev.href}>
-            <p className="text-sm">Previous Page</p>
-            <div className="flex flex-row gap-1 text-lg font-extrabold">
-              <p>&laquo;</p>
-              <p>{prev.title}</p>
-            </div>
-          </Link>
-        ) : (
-          <></>
-        )}
-        {next?.href ? (
-          <Link className="flex flex-grow flex-col items-end" href={next.href}>
-            <p className="text-sm">Next Page</p>
-            <div className="flex flex-row gap-1 text-lg font-extrabold">
-              <p>{next.title}</p>
-              <p>&raquo;</p>
-            </div>
-          </Link>
-        ) : (
-          <></>
-        )}
-      </div>
+      {/* Right Sidebar */}
+      <div className="hidden w-[12rem] pr-8 lg:block"></div>
     </div>
   );
 }
@@ -146,8 +158,8 @@ function retrieveMDXItemMetadata(
     } else {
       _ref.mdx = item;
 
-      if (!_ref.next) {
-        _ref.next = findNextItemWithLink(item);
+      if (!_ref.next && 'items' in item) {
+        _ref.next = findNextItemWithLink(item.items);
       }
       return _ref;
     }
@@ -165,10 +177,12 @@ function retrieveMDXItemMetadata(
         _slugIndex,
         _ref
       );
+
       if (found) {
         if (!_ref.next) {
-          _ref.next = item.items.find((c, idx) => idx > i && c.href);
+          _ref.next = findNextItemWithLink(item.items.slice(i + 1));
         }
+
         return found;
       }
     }
@@ -177,17 +191,21 @@ function retrieveMDXItemMetadata(
   return undefined;
 }
 
-const findNextItemWithLink = (item: MDXItem): MDXItem | undefined => {
-  if ('items' in item) {
+const findNextItemWithLink = (items: MDXItem[]): MDXItem | undefined => {
+  for (const item of items) {
+    const found = findItemWithLink(item);
+    if (found) return found;
+  }
+  return undefined;
+};
+
+const findItemWithLink = (item: MDXItem): MDXItem | undefined => {
+  if (item.href) {
+    return item;
+  } else if ('items' in item) {
     for (const c of item.items) {
-      if (c.href) {
-        return c;
-      } else {
-        const nested = findNextItemWithLink(c);
-        if (nested) {
-          return nested;
-        }
-      }
+      const found = findItemWithLink(c);
+      if (found) return found;
     }
   }
 

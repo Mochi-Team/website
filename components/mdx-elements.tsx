@@ -4,7 +4,7 @@ import styles from './mdx.module.css';
 import { MDXItem, MDXDir, MDXFile } from '@/utils/mdx-paths';
 import Link from 'next/link';
 import '../utils/array';
-import { MouseEvent, MouseEventHandler, useState } from 'react';
+import { useState } from 'react';
 import { HiOutlineChevronDown, HiOutlineChevronRight } from 'react-icons/hi';
 
 const MDXGroup = ({
@@ -25,7 +25,11 @@ const MDXGroup = ({
       tapped={() => setExpanded(!isExpanded)}
       selected={selected}
     >
-      <ul className={`${styles['docs-group']} ${isExpanded ? '' : 'hidden'}`}>
+      <ul
+        className={`overflow-hidden transition-all duration-200 ${
+          styles['docs-group']
+        } ${isExpanded ? '' : ' max-h-0'}`}
+      >
         <MDXGroupComponents items={child.items} selected={selected} />
       </ul>
     </MDXTitleComponent>

@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navbar-height: 92px;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 244, 244, 244;
+  --background-end-rgb: var(--background-start-rgb);
+  --scrollbar-color: 200, 200, 200;
+  --scrollbar-base-color: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 28, 28, 28;
+    --background-end-rgb: var(--background-start-rgb);
+    --scrollbar-color: 50, 50, 50;
+    --scrollbar-base-color: 28, 28, 28;
+  }
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  /* background: rgb(var(--scrollbar-base-color)); */
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  width: 0.5rem;
+  background: rgb(var(--scrollbar-color));
+  border-radius: 5px;
+}
+
+html {
+  scrollbar-color: rgb(var(--scrollbar-color));
+  scrollbar-width: thin;
+  scrollbar-base-color: transparent;
+  /* scrollbar-base-color: rgb(var(--scrollbar-base-color)); */
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+  .invisible-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+
+  .invisible-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .invisible-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .max-w-layout {
+    @apply px-8;
+    @apply max-w-2xl;
+  }
+
+  .max-w-center-layout {
+    @apply mx-auto max-w-layout;
+  }
+
+  .min-h-content {
+    min-height: calc(100vh - var(--navbar-height));
+  }
+
+  .h-content {
+    height: calc(100vh - var(--navbar-height));
+  }
+}
+
+.bg-initial-color {
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+.foreground-color {
+  color: rgb(var(--foreground-rgb));
+}
+
+.on-dismiss-blur {
+  animation: 500ms ease-in-out 0s 1 dismissBlurAnimation forwards;
+}

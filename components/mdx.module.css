@@ -17,13 +17,14 @@
 }
 
 .docs-title-sel {
+  @apply font-bold;
   color: inherit;
   background-color: rgba(128, 128, 128, 0.14);
 }
 
 /* Set padding for all titles that are not links */
 .docs-title {
-  padding: 8px;
+  padding: 6px 8px;
   cursor: pointer;
 }
 
@@ -32,7 +33,7 @@
   display: block;
 }
 
-.docs-title a button {
+.docs-title button {
   background-color: transparent;
   -webkit-transition-property: background-color, color;
   -webkit-transition-duration: 0.25s;
@@ -41,7 +42,7 @@
   border-radius: 8px;
 }
 
-.docs-title a button:hover {
+.docs-title button:hover {
   background-color: rgba(128, 128, 128, 0.18);
 }
 

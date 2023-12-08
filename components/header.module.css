@@ -1,7 +1,7 @@
 .nav {
   display: flex;
   flex-direction: column;
-  height: calc(100% - 5.75rem);
+  height: calc(100vh - var(--navbar-height));
   transition:
     transform 500ms ease-in-out,
     opacity 500ms ease-in-out;
@@ -15,7 +15,7 @@
 }
 
 .hideNav {
-  transform: translateY(calc(-100% - 28px - 4rem));
+  transform: translateY(calc(-100% - var(--navbar-height)));
 }
 
 @keyframes navHideAnimation {

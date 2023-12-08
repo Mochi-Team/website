@@ -35,8 +35,8 @@ export function Header() {
   ];
 
   return (
-    <header className="z-50">
-      <nav className="relative z-20 flex flex-row p-8 backdrop-blur-lg">
+    <header className="sticky top-0 z-50 backdrop-blur-lg">
+      <nav className="max-w-center-layout relative z-20 flex flex-row p-8">
         <a
           href="/"
           className="flex shrink items-center gap-3 text-lg font-bold"

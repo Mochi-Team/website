@@ -1,8 +1,10 @@
+import createMDX from '@next/mdx';
+import { h } from 'hastscript';
+
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import createMDX from '@next/mdx';
-import { h } from 'hastscript';
+import rehypePrismPlus from 'rehype-prism-plus'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -18,20 +20,21 @@ const withMDX = createMDX({
         rehypeAutolinkHeadings,
         {
           behavior: 'append',
-          headingProperties: { class: 'group flex gap-2' },
+          headingProperties: { class: 'group' },
           properties: {
             ariaHidden: true,
             tabIndex: -1,
-            class: 'no-underline not-prose',
+            class: 'no-underline not-prose px-2',
           },
           content: [
             h(
-              'span.invisible.group-hover:visible.not-prose.text-neutral-300/50',
+              'span.opacity-0.group-hover:opacity-100.not-prose.text-neutral-300/50 transition-all',
               '#'
             ),
           ],
         },
       ],
+      rehypePrismPlus,
     ],
   },
 });
