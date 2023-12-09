@@ -35,7 +35,7 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-initial-color-blur">
+    <header className="bg-initial-color-blur sticky top-0 z-50">
       <nav className="max-w-center-layout relative z-20 flex flex-row p-8">
         <a
           href="/"
