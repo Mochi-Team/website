@@ -28,7 +28,7 @@ const withMDX = createMDX({
           },
           content: [
             h(
-              'span.opacity-0.group-hover:opacity-100.not-prose.text-neutral-300/50 transition-all',
+              'span.opacity-0.group-hover:opacity-100.not-prose.text-neutral-500 transition-all',
               '#'
             ),
           ],

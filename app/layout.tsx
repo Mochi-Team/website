@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-pt-[var(--navbar-height)]">
       <Body>
         <Header />
-        <main className="min-h-content flex-auto">{children}</main>
+        {children}
         <Footer />
       </Body>
     </html>

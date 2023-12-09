@@ -57,6 +57,14 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+main {
+  @apply min-h-content;
+}
+
+main:not(.no-max-layout) {
+  @apply max-w-center-layout
+}
+
 @layer utilities {
   .invisible-scrollbar::-webkit-scrollbar-thumb {
     background: transparent;
@@ -86,19 +94,23 @@ body {
   .h-content {
     height: calc(100vh - var(--navbar-height));
   }
-}
 
-.bg-initial-color {
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+  .foreground-color {
+    color: rgb(var(--foreground-rgb));
+  }  
 
-.foreground-color {
-  color: rgb(var(--foreground-rgb));
+  .bg-initial-color {
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(var(--background-end-rgb))
+      )
+      rgb(var(--background-start-rgb));
+  }
+
+  .bg-initial-color-blur {
+    @apply backdrop-filter backdrop-blur-lg;
+  }
 }
 
 .on-dismiss-blur {

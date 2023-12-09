@@ -12,7 +12,11 @@ export type BodyContextType = {
 
 export const BodyContext = createContext<BodyContextType | null>(null);
 
-export const Body = ({ children }: { children: React.ReactNode }) => {
+export const Body = ({
+  children
+}: {
+  children: React.ReactNode;
+}) => {
   const [isShowingNav, setShowingNav] = useState(false);
   return (
     <BodyContext.Provider value={{ isShowingNav, setShowingNav }}>

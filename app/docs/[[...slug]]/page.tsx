@@ -63,9 +63,9 @@ export default async function Page({
   ).then((p) => p.default);
 
   return (
-    <div className="flex w-full flex-col justify-center sm:flex-row">
+    <main className="no-max-layout flex w-full flex-col sm:flex-row sm:justify-center">
       {/* Left Sidebar */}
-      <div className="w-fill sm:h-content sm:[&:not(:hover)]:invisible-scrollbar flex-shrink-0 flex-grow-0 pl-8 pr-8 sm:sticky sm:right-0 sm:top-[var(--navbar-height)] sm:w-[12rem] sm:self-start sm:overflow-y-scroll sm:pr-0">
+      <div className="w-fill sm:h-content sm:[&:not(:hover)]:invisible-scrollbar flex-shrink-0 flex-grow-0 pl-8 pr-8 sm:sticky sm:right-0 sm:top-[var(--navbar-height)] sm:w-[14rem] sm:self-start sm:overflow-y-scroll sm:pr-0">
         <p className="px-2 py-3 text-sm font-bold">Documentation</p>
         <ul className={`list-none text-sm`}>
           <MDXTitleComponent child={allDirs} selected={slug} />
@@ -75,27 +75,12 @@ export default async function Page({
       {/* Center Items */}
       <div className="max-w-layout flex w-full flex-col">
         {/* Path */}
-        <div className="my-2 flex flex-row gap-2 py-1 text-sm">
-          <p className="text-neutral-500">Documentation</p>
+        <ul className="my-2 flex flex-row gap-2 py-1 text-sm">
+          <li className="text-neutral-500">Documentation</li>
           {titlesPath.map((o, idx, arr) => (
-            <>
-              <p className="font-semibold text-neutral-500">/</p>
-              <p
-                className={
-                  idx === arr.length - 1 ? 'text-inherit' : 'text-neutral-500'
-                }
-              >
-                {o.href ? (
-                  <Link key={o.title} href={o.href}>
-                    {o.title}
-                  </Link>
-                ) : (
-                  o.title
-                )}
-              </p>
-            </>
+            <PathTitle key={idx} item={o} selected={idx === arr.length - 1} />
           ))}
-        </div>
+        </ul>
         {/* Content */}
         <div className="prose prose-neutral w-full dark:prose-invert">
           <h1>{mdxMeta.title}</h1>
@@ -131,10 +116,33 @@ export default async function Page({
         </div>
       </div>
       {/* Right Sidebar */}
-      <div className="hidden w-[12rem] pr-8 lg:block"></div>
-    </div>
+      <div className="hidden w-[14rem] pr-8 lg:block"></div>
+    </main>
   );
 }
+
+const PathTitle = ({
+  item,
+  selected,
+}: {
+  item: MDXItem;
+  selected: boolean;
+}) => (
+  <>
+    <li>
+      <p className="font-semibold text-neutral-500">/</p>
+    </li>
+    <li className={selected ? 'text-inherit' : `text-neutral-500`}>
+      {item.href ? (
+        <Link className="hover:foreground-color" href={item.href}>
+          {item.title}
+        </Link>
+      ) : (
+        item.title
+      )}
+    </li>
+  </>
+);
 
 function retrieveMDXItemMetadata(
   slug: string[],

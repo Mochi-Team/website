@@ -40,7 +40,7 @@ export const allValidMDXDirectories = async (): Promise<MDXDir> => {
         .relative(parentDir, dir)
         .split('/')
         .filter((o) => o.length > 0),
-      title: capitalize(path.relative(prevDir, dir).replace('-', ' ')),
+      title: capitalize(path.relative(prevDir, dir).replaceAll('-', ' ')),
       items: [],
     };
 
@@ -56,7 +56,7 @@ export const allValidMDXDirectories = async (): Promise<MDXDir> => {
       let title = meta?.[slug];
 
       if (!title || title.length == 0) {
-        title = capitalize(slug.replace('-', ' '));
+        title = capitalize(slug.replaceAll('-', ' '));
       }
 
       if (n.name === 'index.mdx') {
