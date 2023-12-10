@@ -1,4 +1,4 @@
-import { DISCORD_LINK } from "@/utils/constants.ts"
+import { DISCORD_LINK } from '@/utils/constants.ts';
 
 Before we continue, there are things that must be considered before building a module:
 
@@ -6,7 +6,7 @@ Before we continue, there are things that must be considered before building a m
 - You can use the name Mochi only for compatibility purposes, e.g. "X for Mochi".
 - TBA
 
-In summary, you should only build modules for the content you own. 
+In summary, you should only build modules for the content you own.
 
 With that out of the way, you can start building modules!
 
@@ -15,9 +15,9 @@ With that out of the way, you can start building modules!
 Each of these tools will help you developing a module:
 
 - [@mochiapp/cli](https://github.com/mochi-team/cli): A cli tool used to create, build, and bundle modules into repositories. This is the main helper tool used for
-building modules.
-- [@mochiapp/js](https://github.com/mochi-team/js): A JavaScript/TypeScript bindings library which interact with Apple devices and JavaScript. There are documentations to how the module is supposed to 
-implement each method.
+  building modules.
+- [@mochiapp/js](https://github.com/mochi-team/js): A JavaScript/TypeScript bindings library which interact with Apple devices and JavaScript. There are documentations to how the module is supposed to
+  implement each method.
 - [@mochiapp/runner](https://github.com/mochi-team/runner): A test runner used to debug Mochi modules using Node's API.
 
 ## Foundation
@@ -43,6 +43,7 @@ The structure of a repository follows a typical TypeScript Library:
 
 Each module folder must have a file name called `index.ts`, and within the file it must export a default class that extends `SourceModule`.
 Each `SourceModule` class can implement none to all of the following types:
+
 - `VideoContent`
 - `ImageContent` (WIP)
 - `TextContent` (WIP)
