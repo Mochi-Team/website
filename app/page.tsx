@@ -1,3 +1,4 @@
+import { TESTFLIGHT_LINK } from '@/utils/constants';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FiExternalLink, FiChevronRight } from 'react-icons/fi';
@@ -52,7 +53,7 @@ export default function Home() {
           <Link
             target="_blank"
             rel="noopener noreferrer"
-            href="https://testflight.apple.com/join/d960sZAm"
+            href={TESTFLIGHT_LINK}
             className="wrap flex h-12 items-center gap-2 rounded-2xl border-2 border-neutral-500/20 bg-green-200/60 px-4"
           >
             Join TestFlight

@@ -2,9 +2,10 @@ import createMDX from '@next/mdx';
 import { h } from 'hastscript';
 
 import remarkGfm from 'remark-gfm';
+import { remarkDefinitionList, defListHastHandlers } from 'remark-definition-list';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypePrismPlus from 'rehype-prism-plus'
+import rehypePrismPlus from 'rehype-prism-plus';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -13,7 +14,10 @@ const nextConfig = {
 
 const withMDX = createMDX({
   options: {
-    remarkPlugins: [remarkGfm],
+    remarkPlugins: [
+      remarkGfm,
+      remarkDefinitionList
+    ],
     rehypePlugins: [
       rehypeSlug,
       [
@@ -36,6 +40,11 @@ const withMDX = createMDX({
       ],
       rehypePrismPlus,
     ],
+    remarkRehypeOptions: {
+      handlers: {
+        ...defListHastHandlers
+      }
+    }
   },
 });
 

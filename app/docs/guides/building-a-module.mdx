@@ -1,16 +1,59 @@
-A module allows retrieving content from an external source. This may be a Jellyfin instance, your own server, whichever!
+import { DISCORD_LINK } from "@/utils/constants.ts"
 
-With this, there are still things that must be considered before building a module:
-* Any module you develop is not associated with Mochi.
-* TBA
+Before we continue, there are things that must be considered before building a module:
 
-Each module must correspond to a repository in order to receive any module updates.
-In the future I will allow users to install a single module without a repository.
+- Do not use the Mochi name in a way that it would make the average user think you are associated with the project.
+- You can use the name Mochi only for compatibility purposes, e.g. "X for Mochi".
+- TBA
+
+In summary, you should only build modules for the content you own. 
+
+With that out of the way, you can start building modules!
 
 ## Tools
 
-These tools will help you build a module:
-* [cli](https://github.com/mochi-team/cli): A tool used to bundle modules and generate repository.
-* [js](https://github.com/mochi-team/js): TypeScript bindings for developing modules.
-* [runner](https://github.com/mochi-team/runner): A test runner used to debug Mochi modules using node.
-* [Mochi](https://github.com/mochi-team/mochi): The app itself.
+Each of these tools will help you developing a module:
+
+- [@mochiapp/cli](https://github.com/mochi-team/cli): A cli tool used to create, build, and bundle modules into repositories. This is the main helper tool used for
+building modules.
+- [@mochiapp/js](https://github.com/mochi-team/js): A JavaScript/TypeScript bindings library which interact with Apple devices and JavaScript. There are documentations to how the module is supposed to 
+implement each method.
+- [@mochiapp/runner](https://github.com/mochi-team/runner): A test runner used to debug Mochi modules using Node's API.
+
+## Foundation
+
+Modules are built using TypeScript/JavaScript. All the files within a module are then bundled into one single `.js` file.
+
+The module is then executed in the app using `JavaScriptCore`, which only has basic JavaScript APIs. This means that no WebKit APIs work, except for `console` logger.
+
+## Structure
+
+The structure of a repository follows a typical TypeScript Library:
+
+```
+├── src
+│   ├── module-1
+│   │   └── index.ts
+│   └── module-2
+│       └── index.ts
+├── index.ts (repository metadata in the root folder)
+├── package.json
+└── .gitignore
+```
+
+Each module folder must have a file name called `index.ts`, and within the file it must export a default class that extends `SourceModule`.
+Each `SourceModule` class can implement none to all of the following types:
+- `VideoContent`
+- `ImageContent` (WIP)
+- `TextContent` (WIP)
+
+In the parent directory, there must be an `index.ts` file that has a `RepoMetadata` exported by default.
+
+## Bundling
+
+Each module directory is then bundled into one single `.js` file. Using [@mochiapp/cli](https://github.com/mochi-team/cli), you can bundle the modules and build a repository.
+
+## Support
+
+If you are having issues with building a repository, modules, or even want to request new features, feel free to create a pull request
+on GitHub, or join the Discord {<a target="_blank" href={DISCORD_LINK}>server</a>} for any additional support.

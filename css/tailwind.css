@@ -62,7 +62,7 @@ main {
 }
 
 main:not(.no-max-layout) {
-  @apply max-w-center-layout
+  @apply max-w-center-layout;
 }
 
 @layer utilities {
@@ -73,7 +73,7 @@ main:not(.no-max-layout) {
   .invisible-scrollbar::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   .invisible-scrollbar {
     scrollbar-width: none;
   }
@@ -84,7 +84,7 @@ main:not(.no-max-layout) {
   }
 
   .max-w-center-layout {
-    @apply mx-auto max-w-layout;
+    @apply max-w-layout mx-auto;
   }
 
   .min-h-content {
@@ -97,7 +97,7 @@ main:not(.no-max-layout) {
 
   .foreground-color {
     color: rgb(var(--foreground-rgb));
-  }  
+  }
 
   .bg-initial-color {
     background: linear-gradient(
@@ -109,7 +109,7 @@ main:not(.no-max-layout) {
   }
 
   .bg-initial-color-blur {
-    @apply backdrop-filter backdrop-blur-lg;
+    @apply backdrop-blur-lg backdrop-filter;
   }
 }
 
