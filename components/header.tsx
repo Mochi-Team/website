@@ -41,7 +41,7 @@ export function Header() {
           href="/"
           className="flex shrink items-center gap-3 text-lg font-bold"
         >
-          <Image width={28} src={MochiLogo} alt={'mochi logo'} />
+          <Image width={32} src={MochiLogo} alt={'mochi logo'} />
           Mochi
         </a>
 
