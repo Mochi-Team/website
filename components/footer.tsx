@@ -8,10 +8,10 @@ export function Footer() {
         <p className="flex flex-wrap justify-center gap-1">
           Designed and developed by
           <a
-            className="flex items-center gap-1 md:ml-auto"
-            href="https://errorerrorerror.dev"
+            className="flex items-center gap-1 font-bold text-white md:ml-auto"
+            href="https://erikb.dev"
           >
-            errorerrorerror <HiOutlineExternalLink />
+            @erikbdev <HiOutlineExternalLink />
           </a>
           &
           <a

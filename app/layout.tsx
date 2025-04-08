@@ -1,5 +1,6 @@
 import '@/css/tailwind.css';
 import '@/css/prism.css';
+import AppLogo from '@/public/mochi-logo.png';
 
 import type { Metadata } from 'next';
 import { Body } from '@/components/body';
@@ -8,7 +9,8 @@ import { Header } from '@/components/header';
 
 export const metadata: Metadata = {
   title: 'Mochi | Your media, all in one place.',
-  description: 'Built by @errorerrorerror',
+  description: 'Built by @erikbdev',
+  icons: ['/mochi-logo.png'],
 };
 
 export default function RootLayout({

@@ -2,6 +2,9 @@ import { TESTFLIGHT_LINK } from '@/utils/constants';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FiExternalLink, FiChevronRight } from 'react-icons/fi';
+import MochiDiscoverImg from '@/public/demo/mochi-discover.png';
+import MochiRepoImg from '@/public/demo/mochi-repo.png';
+import MochiSettingsImg from '@/public/demo/mochi-settings.png';
 
 type CardInfo = {
   title: string;
@@ -37,10 +40,9 @@ const cards: CardInfo[] = [
 
 export default function Home() {
   return (
-    <main className="flex flex-col items-center gap-12 pb-8">
+    <main className="flex flex-col items-center gap-4 pb-8">
       {/* Hero */}
-      <section className="flex w-full flex-col gap-8">
-        {/* Display app screenshots */}
+      <section className="flex w-full flex-col gap-8 p-6">
         {/* Hero Title */}
         <div className="flex flex-1 flex-col gap-1 text-center">
           <p className="text-2xl font-bold">
@@ -68,12 +70,43 @@ export default function Home() {
           </Link>
         </div>
       </section>
-      <section>
+      {/* Buttons */}
+      <section className="w-full">
         <ul className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
           {cards.map((c) => (
             <InfoCard key={c.title} info={c} />
           ))}
         </ul>
+      </section>
+      {/* Display app screenshots */}
+      <section className="flex w-full flex-col gap-2 rounded-2xl border border-neutral-500/30 bg-neutral-500/10 p-6 transition duration-300 ease-in-out">
+        <p className="text-md font-bold">Screenshots</p>
+        <div className="flex w-full flex-col gap-4 overflow-auto pb-2 md:flex-row">
+          <a href={MochiDiscoverImg.src} target="_blank" rel="noopener">
+            <Image
+              className="rounded-sm border-[1px] border-neutral-500/20"
+              quality={100}
+              src={MochiDiscoverImg}
+              alt={'Mochi app discover image'}
+            />
+          </a>
+          <a href={MochiRepoImg.src} target="_blank" rel="noopener">
+            <Image
+              className="rounded-sm border-[1px] border-neutral-500/20"
+              quality={100}
+              src={MochiRepoImg}
+              alt={'Mochi app repo image'}
+            />
+          </a>
+          <a href={MochiSettingsImg.src} target="_blank" rel="noopener">
+            <Image
+              className="rounded-sm border-[1px] border-neutral-500/20"
+              quality={100}
+              src={MochiSettingsImg}
+              alt={'Mochi app settings image'}
+            />
+          </a>
+        </div>
       </section>
     </main>
   );
